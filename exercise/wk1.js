@@ -42,3 +42,42 @@ const majorityElement = (nums) => {
 // const nums = [2, 2, 1, 1, 1, 2, 2]
 
 // console.log('majorityElement', majorityElement(nums));
+
+const prices = [7,6,4,3,1]
+var maxProfit = function(prices) {
+    let buyPrice = prices[0]
+    let maxProfit = 0;
+
+    for (let i = 1; i < prices.length; i++) {
+        const element = prices[i];
+
+        if(element < buyPrice) {
+            buyPrice = element;
+            continue;
+        }
+
+        maxProfit = Math.max(maxProfit, element - buyPrice )
+        
+    }
+return maxProfit
+};
+
+// console.log('maxProfit', maxProfit(prices));
+
+const nums = [3,1,-2,-5,2,-4]
+var rearrangeArray = function(nums) {
+    let postive = -2;
+    let negative = -2;
+    let ans = [];
+
+    for (let i = 0; i < nums.length; i++) {
+        const element = nums[i];
+        if(element < 0) {
+            negative += 2;
+            // ans[negative] = 
+        }
+    }
+
+};
+
+console.log('rearrangeArray', rearrangeArray(prices));
