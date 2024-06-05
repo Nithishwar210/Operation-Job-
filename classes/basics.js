@@ -84,3 +84,28 @@ console.log(Square2.isValidDimension(NaN,NaN));
 
 
 
+class Person {
+    constructor(name,age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    describe() {
+        console.log(`I am ${this.name} and I am ${this.age} years old`);
+    }
+
+}
+
+class Programmer extends Person{
+
+    constructor(name,age,expericance) {
+        super(name,age)
+        this.expericance= expericance
+    };
+
+}
+
+const prog = new Programmer('Nithishwar',23,3);
+
+prog.describe()
+
