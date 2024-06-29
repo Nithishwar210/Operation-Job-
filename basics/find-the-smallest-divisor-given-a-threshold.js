@@ -32,4 +32,28 @@ var smallestDivisor = function(nums, threshold) {
 };
 
 const nums = [1,2,5,9], threshold = 6
-console.log('smallestDivisor',smallestDivisor(nums,threshold));
+
+const combinationOfAnagram = (str = '',ang)  => {
+
+    let result = [];
+    let stringLength = ang.length;
+
+    for (let index = 0; index <= str.length - stringLength; index++) {
+        let string = str.substring(index, index + stringLength);
+        if(isAnagram(string,ang)) {
+            result.push(string)
+        }
+        
+    }
+
+
+return result
+
+};
+
+const isAnagram = (str1,str2) => {
+    const sorting = (str) => str.split('').sort().join();
+    return sorting(str1) === sorting(str2)
+};
+console.log(combinationOfAnagram("stopatthespotnearthepots", "tops"));
+//stop spot pots
