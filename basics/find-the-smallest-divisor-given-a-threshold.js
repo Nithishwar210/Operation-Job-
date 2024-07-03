@@ -57,28 +57,28 @@ const isAnagram = (str1, str2) => {
 //stop spot pots
 
 
-const getDuplicated = (arr) => {
+    const getDuplicated = (arr) => {
 
-    const obj = {};
+        const obj = {};
 
-    for (let i = 0; i < arr.length; i++) {
-        const element = arr[i];
-        obj[element] = (obj[element] || 0) + 1
-    }
-
-    const keys = Object.keys(obj);
-    let result = [];
-
-    for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        const value = obj[key]
-        if(value > 1) {
-            result.push(...Array(value).fill(key))
+        for (let i = 0; i < arr.length; i++) {
+            const element = arr[i];
+            obj[element] = (obj[element] || 0) + 1
         }
 
+        const keys = Object.keys(obj);
+        let result = [];
+
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            const value = obj[key]
+            if(value > 1) {
+                result.push(...Array(value).fill(key))
+            }
+
+        }
+        return result
     }
-    return result
-}
 
 const dupNums = [1, 1, 3, 3, 2, 4, 5, 5, 6]
 // [1,1,3,3,5,5]
