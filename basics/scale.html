@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scale Rectangle Inside Boundary</title>
+    <style>
+        canvas {
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="canvas" width="2200" height="1400"></canvas>
+
+    <script>
+function isPointInPolygon(point, polygon) {
+    let [x, y] = point;
+    let inside = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+        let [xi, yi] = polygon[i];
+        let [xj, yj] = polygon[j];
+        
+        let intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+    return inside;
+}
+
+function findScaledRectangle(boundary, rectangle) {
+    // Extract rectangle properties
+    const rectX = rectangle.x;
+    const rectY = rectangle.y;
+    const rectWidth = rectangle.width;
+    const rectHeight = rectangle.height;
+
+    // Calculate the center of the rectangle
+    const centerX = rectX + rectWidth / 2;
+    const centerY = rectY + rectHeight / 2;
+
+    // Calculate the distances from the center to each boundary edge
+    const distances = boundary.map(([x, y]) => ({
+        left: Math.abs(centerX - x),
+        right: Math.abs(x - centerX),
+        top: Math.abs(centerY - y),
+        bottom: Math.abs(y - centerY)
+    }));
+
+    // Find the minimum distance in each direction
+    const minLeft = Math.min(...distances.map(d => d.left));
+    const minRight = Math.min(...distances.map(d => d.right));
+    const minTop = Math.min(...distances.map(d => d.top));
+    const minBottom = Math.min(...distances.map(d => d.bottom));
+
+    // Calculate the maximum width and height the rectangle can have
+    const maxWidth = Math.min(minLeft, minRight) * 2;
+    const maxHeight = Math.min(minTop, minBottom) * 2;
+
+    // Calculate the scaling factor
+    const scaleFactor = Math.min(maxWidth / rectWidth, maxHeight / rectHeight);
+
+    // Calculate new width and height
+    const newWidth = rectWidth * scaleFactor;
+    const newHeight = rectHeight * scaleFactor;
+
+    // Calculate new top-left corner to maintain the center
+    const newX = centerX - newWidth / 2;
+    const newY = centerY - newHeight / 2;
+
+    // Return the scaled rectangle
+    return {
+        x: newX,
+        y: newY,
+        width: newWidth,
+        height: newHeight
+    };
+}
+
+
+        function drawRectangle(ctx, rectangle, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+        }
+
+        function drawBoundary(ctx, boundary) {
+            ctx.beginPath();
+            ctx.moveTo(boundary[0][0], boundary[0][1]);
+            for (let i = 1; i < boundary.length; i++) {
+                ctx.lineTo(boundary[i][0], boundary[i][1]);
+            }
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        function markPoint(ctx, x, y, color) {
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, 2 * Math.PI);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.stroke();
+        }
+
+
+        let boundary = [[0, 0], [887, 0], [887, 632], [2158, 632], [2158, 1381], [0, 1381], [0, 0]]
+        let rectangle = { x: 299, y: 409, width: 525, height: 724 }
+
+        // let boundary = [[0, 0], [887, 0], [887, 632], [2158, 632], [2158, 1381], [0, 1381], [0, 0]];
+        // let rectangle = { x: 273, y: 829, width: 1027, height: 347 };
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const scaledRectangle = findScaledRectangle(boundary, rectangle);
+        console.log({ scaledRectangle });
+        drawBoundary(ctx, boundary);
+        drawRectangle(ctx, rectangle, 'rgba(123, 0, 0, 0.5)');
+
+        drawRectangle(ctx, scaledRectangle, 'rgba(0, 255, 0, 1)'); //result
+        // drawRectangle(ctx, { x: 299, y: 409, width: 525, height: 724 }, 'rgba(123, 0, 0, 1)'); //input
+        drawRectangle(ctx, { x: 236, y: 322, width: 651, height: 891 }, 'rgba(255, 0, 0, 0.5)'); //output
+
+        // Marking points for visual reference
+        markPoint(ctx, rectangle.x, rectangle.y, 'black'); // Top-left corner of original rectangle
+        markPoint(ctx, rectangle.x + rectangle.width, rectangle.y + rectangle.height, 'black'); // Bottom-right corner of original rectangle
+        markPoint(ctx, scaledRectangle.x, scaledRectangle.y, 'black'); // Top-left corner of scaled rectangle
+        markPoint(ctx, scaledRectangle.x + scaledRectangle.width, scaledRectangle.y + scaledRectangle.height, 'black'); // Bottom-right corner of scaled rectangle
+
+    </script>
+
+</body>
+
+</html>
